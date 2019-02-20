@@ -5,7 +5,7 @@ import scrapy
 import re
 from urllib.parse import urljoin
 
-from my_spider.items import JoBoleArticleItem
+from my_spider.items import JoBoleArticleItem, JoboleArticleItemLoader
 from my_spider.utils.common import get_md5
 
 
@@ -32,6 +32,7 @@ class JobboleSpider(scrapy.Spider):
             yield scrapy.Request(url=next_url, callback=self.all_posts)
 
     def article(self, response):
+        """
         article_item = JoBoleArticleItem()
         article_img = response.meta.get("file_img", "")   # 封面图片url
         article_title = response.xpath('//div[@class="entry-header"]/h1/text()').get()    # 文章标题
@@ -72,5 +73,23 @@ class JobboleSpider(scrapy.Spider):
         article_item["collection_number"] = collection_num
         article_item["diccuss_number"] = diccuss_num
         article_item["url_object_id"] = get_md5(response.url)
+        """
+
+        article_img = response.meta.get("file_img", "")
+        article_author = response.xpath('//div[@id="author-bio"]/h3/a/text()').get()
+        if article_author is None:
+            article_author = "None"
+        item_loader = JoboleArticleItemLoader(item=JoBoleArticleItem(), response=response)
+        item_loader.add_value("article_img", article_img)
+        item_loader.add_xpath("article_title", '//div[@class="entry-header"]/h1/text()')
+        item_loader.add_xpath("date_time", '//div[@class="entry-meta"]/p/text()')
+        item_loader.add_xpath("article_label", '//div[@class="entry-meta"]/p/a/text()')
+        item_loader.add_value("article_author", article_author)
+        item_loader.add_xpath("love_number", '//div[@class="post-adds"]/span[1]/text()')
+        item_loader.add_xpath("collection_number", '//div[@class="post-adds"]/span[2]/text()')
+        item_loader.add_xpath("diccuss_number", '//div[@class="post-adds"]/a/span[last()]/text()')
+        item_loader.add_value("url_object_id", response.url)
+        article_item = item_loader.load_item()
+
         yield article_item         # article_item 会传递进pipelines
 

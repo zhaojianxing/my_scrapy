@@ -97,10 +97,19 @@ class MysqlTwistedPipeline(object):
         # 处理异步插入的异常
         print(failure)
 
+    def author(self, item):
+        author = ''
+        if item["article_author"] == "None":
+            author = None
+        else:
+            author = item["article_author"]
+        return author
+
     def do_insert(self,cursor, item):
         # 执行具体的插入
         insert_sql = """
         insert into jobbole_article_tw(article_img, url_object_id, artiicle_title, date_time, article_label, article_author, love_nummber, collection_number, diiccuss_number, artiicle_img_path)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cursor.execute(insert_sql, (item["article_img"][0],item["url_object_id"], item["article_title"], item["date_time"], item["article_label"], item["article_author"], item["love_number"], item["collection_number"], item["diccuss_number"], item["article_img_path"]))
+        author = self.author(item)
+        cursor.execute(insert_sql, (item["article_img"][0],item["url_object_id"], item["article_title"], item["date_time"], item["article_label"], author, item["love_number"], item["collection_number"], item["diccuss_number"], item["article_img_path"]))
