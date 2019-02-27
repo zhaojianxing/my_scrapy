@@ -53,9 +53,10 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'my_spider.middlewares.MySpiderDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    'my_spider.middlewares.MySpiderDownloaderMiddleware': None,
+    'my_spider.middlewares.RandomUserAgentMiddlware': 543      # 自己写的"user-agent"中间件
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -105,3 +106,6 @@ MYSQL_HOST = "localhost"
 MYSQL_PASSWORD = "178178"
 MYSQL_DBNAME = "JobBole"
 MYSQL_USER = "root"
+
+# 设置随机ua的信息
+RANDOM_UA_TYPE = "random"
