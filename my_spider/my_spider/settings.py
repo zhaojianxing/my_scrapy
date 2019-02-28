@@ -55,7 +55,8 @@ ROBOTSTXT_OBEY = False
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     'my_spider.middlewares.MySpiderDownloaderMiddleware': None,
-    'my_spider.middlewares.RandomUserAgentMiddlware': 543      # 自己写的"user-agent"中间件
+    'my_spider.middlewares.RandomUserAgentMiddlware': 543,      # 自己写的"user-agent"中间件
+    'my_spiider.middlewares.RandomGetProxyIp': 544
 }
 
 # Enable or disable extensions
